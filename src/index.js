@@ -22,7 +22,7 @@
       //Bind Click Events to Elements
       for (i = 0; i < this.tasklistChildren.length; i += 1) {
         //Add click event to checkboxes
-        chkBox = this.tasklistChildren[i].getElementById("input")[0];
+        chkBox = this.tasklistChildren[i].getElementsByTagName("input")[0];
         chkBox.onclick = this.completeTask.bind(
           this,
           this.tasklistChildren[i],
@@ -50,6 +50,50 @@
       taskTrsh.setAttribute("class", "fa fa-trash");
       //Insert trash can into button
       taskBtn.appendChild(taskTrsh);
+
+      //Append Elements to taskLi
+      taskLi.appendChild(taskChkbx);
+      taskLi.appendChild(taskVal);
+      taskLi.appendChild(taskBtn);
+
+      //Add task to task list
+      this.tasklist.appendChild(taskLi);
+    },
+    completeTask: function (i, chkBox) {
+      if (chkBox.checked) {
+        i.className = "task completed";
+      } else {
+        this.incompleteTask(i);
+      }
+    },
+    incompleteTask: function (i) {
+      i.className = "task";
+    },
+    enterKey: function (event) {
+      if (event.keyCode === 13 || event.which === 13) {
+        this.addTask();
+      }
+    },
+    addTask: function () {
+      let value = this.taskInput.value;
+      this.errorMessage.style.display = "none";
+
+      if (value === "") {
+        this.error();
+      } else {
+        this.render();
+        this.taskInput.value = "";
+        this.evalTasklist();
+      }
+    },
+    delTask: function (i) {
+      this.tasklist.children[i].remove();
+      this.evalTasklist();
+    },
+    error: function () {
+      this.errorMessage.style.display = "block";
     }
   };
-});
+
+  tasker.init();
+})();
